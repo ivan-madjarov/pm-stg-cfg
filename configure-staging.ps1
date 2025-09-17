@@ -5,11 +5,22 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+# Check and temporarily set the execution policy to Bypass if needed
+$currentPolicy = Get-ExecutionPolicy
+if ($currentPolicy -ne "Bypass") {
+    Write-Host "Temporarily setting execution policy to Bypass..." -ForegroundColor Yellow
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+}
+
 # Add entry to the hosts file
 $hostsPath = "$env:SystemRoot\System32\drivers\etc\hosts"
+$blankLine = ""
+$extraLine = "# Patch Management Plus Staging System static resolution"
 $hostsEntry = "10.22.64.49    lab.rsppm.mitel.com"
 
 if (-not (Select-String -Path $hostsPath -Pattern $hostsEntry -Quiet)) {
+    Add-Content -Path $hostsPath -Value $blankLine
+    Add-Content -Path $hostsPath -Value $extraLine
     Add-Content -Path $hostsPath -Value $hostsEntry
     Write-Host "Hosts entry added: $hostsEntry" -ForegroundColor Green
 } else {
@@ -24,6 +35,7 @@ $fqdnShortcutPath = Join-Path $desktopPath "Patch Manager Plus 11 Staging System
 $fqdnTarget = "https://lab.rsppm.mitel.com:8383/"
 $fqdnShortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($fqdnShortcutPath)
 $fqdnShortcut.TargetPath = $fqdnTarget
+$fqdnShortcut.IconLocation = "%SystemRoot%\\System32\\imageres.dll, 184"  # Corrected icon index for the provided image
 $fqdnShortcut.Save()
 Write-Host "Shortcut created: $fqdnShortcutPath" -ForegroundColor Green
 
@@ -32,6 +44,7 @@ $ipShortcutPath = Join-Path $desktopPath "Patch Manager Plus 11 Staging System I
 $ipTarget = "https://10.22.64.49:8383/"
 $ipShortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($ipShortcutPath)
 $ipShortcut.TargetPath = $ipTarget
+$ipShortcut.IconLocation = "%SystemRoot%\\System32\\imageres.dll, 184"  # Corrected icon index for the provided image
 $ipShortcut.Save()
 Write-Host "Shortcut created: $ipShortcutPath" -ForegroundColor Green
 
