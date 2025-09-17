@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1] - 2025-09-17
+- Added `run-configure.bat` bootstrapper to run `configure-staging.ps1` elevated with `-ExecutionPolicy Bypass` for easier execution.
+- Updated `README.md` with clearer usage instructions and examples.
+
 ## [1.2.0] - 2025-09-17
 - Improved `configure-staging.ps1` to add a blank line before the comment and hosts entry for better formatting.
 
