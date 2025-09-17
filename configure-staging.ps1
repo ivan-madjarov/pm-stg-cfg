@@ -14,17 +14,32 @@ if ($currentPolicy -ne "Bypass") {
 
 # Add entry to the hosts file
 $hostsPath = "$env:SystemRoot\System32\drivers\etc\hosts"
-$blankLine = ""
 $extraLine = "# Patch Management Plus Staging System static resolution"
 $hostsEntry = "10.22.64.49    lab.rsppm.mitel.com"
 
-if (-not (Select-String -Path $hostsPath -Pattern $hostsEntry -Quiet)) {
-    Add-Content -Path $hostsPath -Value $blankLine
-    Add-Content -Path $hostsPath -Value $extraLine
-    Add-Content -Path $hostsPath -Value $hostsEntry
-    Write-Host "Hosts entry added: $hostsEntry" -ForegroundColor Green
-} else {
+try {
+    $hostsText = Get-Content -Raw -LiteralPath $hostsPath -ErrorAction Stop
+} catch {
+    Write-Error "Failed to read hosts file: $_"
+    exit 1
+}
+
+# If the exact host entry already exists, do nothing
+if ($hostsText -match [regex]::Escape($hostsEntry)) {
     Write-Host "Hosts entry already exists." -ForegroundColor Yellow
+} else {
+    # Build the block to append. If the comment already exists, only append the entry below it.
+    if ($hostsText -match [regex]::Escape($extraLine)) {
+        # Ensure there is a blank line before the new entry for readability
+        $block = "`r`n" + $hostsEntry + "`r`n"
+    } else {
+        # Add a blank line, the comment, and the hosts entry
+        $block = "`r`n" + $extraLine + "`r`n" + $hostsEntry + "`r`n"
+    }
+
+    # Append using ASCII encoding to avoid introducing a BOM or changing file encoding
+    [System.IO.File]::AppendAllText($hostsPath, $block, [System.Text.Encoding]::ASCII)
+    Write-Host "Hosts entry added: $hostsEntry" -ForegroundColor Green
 }
 
 # Create shortcuts on the desktop
