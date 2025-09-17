@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.2] - 2025-09-17
+- Hosts append now inserts two blank lines before the comment and hosts entry to match requested formatting.
+
 ## [1.2.1] - 2025-09-17
 - Added `run-configure.bat` bootstrapper to run `configure-staging.ps1` elevated with `-ExecutionPolicy Bypass` for easier execution.
 - Updated `README.md` with clearer usage instructions and examples.

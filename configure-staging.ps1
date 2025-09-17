@@ -30,11 +30,11 @@ if ($hostsText -match [regex]::Escape($hostsEntry)) {
 } else {
     # Build the block to append. If the comment already exists, only append the entry below it.
     if ($hostsText -match [regex]::Escape($extraLine)) {
-        # Ensure there is a blank line before the new entry for readability
-        $block = "`r`n" + $hostsEntry + "`r`n"
+        # Ensure there are two blank lines before the new entry for readability
+        $block = "`r`n`r`n" + $hostsEntry + "`r`n"
     } else {
-        # Add a blank line, the comment, and the hosts entry
-        $block = "`r`n" + $extraLine + "`r`n" + $hostsEntry + "`r`n"
+        # Add two blank lines, the comment, and the hosts entry
+        $block = "`r`n`r`n" + $extraLine + "`r`n" + $hostsEntry + "`r`n"
     }
 
     # Append using ASCII encoding to avoid introducing a BOM or changing file encoding

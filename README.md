@@ -5,7 +5,7 @@ This repository contains scripts and configuration files for managing the Patch 
 ## Features
 - Adds a hosts file entry for `lab.rsppm.mitel.com`.
 - Creates desktop shortcuts for accessing the staging system via FQDN and IP.
-- Adds a formatted hosts entry block with a blank line and comment for clarity.
+- Adds a formatted hosts entry block with blank lines and a comment for clarity.
 - Provides a double-clickable bootstrapper to run the configuration script elevated with an execution policy bypass.
 
 ## Usage
@@ -22,6 +22,9 @@ powershell.exe -ExecutionPolicy Bypass -File .\configure-staging.ps1
 Example (double-click from Explorer):
 
 - Double-click `run-configure.bat` and confirm the UAC prompt. The script will run elevated and perform the hosts update and shortcut creation.
+
+## Notes for v1.2.2
+- The hosts entry append logic now inserts two blank lines before the comment and hosts entry to keep the file tidy.
 
 ## Files
 - `configure-staging.ps1` - PowerShell script that updates the hosts file and creates desktop shortcuts.
